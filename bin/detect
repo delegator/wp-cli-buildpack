@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+echo "wp-cli" && exit 0

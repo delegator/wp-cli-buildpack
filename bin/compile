@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir> <env-dir>
+
+set -euo pipefail
+
+# Configure directories
+build_dir=$1
+cache_dir=$2
+env_dir=$3
+
+if [ ! -f $2/wp-cli.phar ]; then
+    echo "Downloading wp-cli..."
+    curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o $2/wp-cli.phar
+fi
+
+echo "Installing wp-cli..."
+mkdir -p $1/.wpcli
+cp $2/wp-cli.phar $1/.wpcli/wp
+chmod +x $1/.wpcli/wp
+$1/.wpcli/wp --info
+
+echo "Configuring path..."
+echo "export PATH=\$HOME/.wpcli:\$PATH" > $build_dir/.profile.d/200-wpcli.sh
